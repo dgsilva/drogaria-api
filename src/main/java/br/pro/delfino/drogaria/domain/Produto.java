@@ -39,7 +39,7 @@ public class Produto implements Serializable {
 	private LocalDate dataDeValidade;
     @ManyToOne
     @JoinColumn(nullable = false)
-    private  Categoria categoria;
+    private Categoria categoria;
     
     
 }

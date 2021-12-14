@@ -19,43 +19,30 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig extends WebMvcConfigurationSupport {
-	
+
 	@Override
-    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("swagger-ui.html")
-                .addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/");
-    }
+	protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+	}
 
-@Bean
-public Docket productApi() {
- return new Docket(DocumentationType.SWAGGER_2)
-         .select()
-         .apis((Predicate<RequestHandler>) RequestHandlerSelectors.basePackage("br.pro.delfino.drogaria"))
-         .paths((Predicate<String>) PathSelectors.regex("/product.*"))
-         .build()
-         .apiInfo(metaInfo());
-}
+	@Bean
+	public Docket productApi() {
+		return new Docket(DocumentationType.SWAGGER_2).select()
+				.apis((Predicate<RequestHandler>) RequestHandlerSelectors.basePackage("br.pro.delfino.drogaria"))
+				.paths((Predicate<String>) PathSelectors.ant("/**")).build().apiInfo(metaInfo());
+	}
 
-private ApiInfo metaInfo() {
+	private ApiInfo metaInfo() {
 
- ApiInfo apiInfo = new ApiInfo(
-         "Drogaria API REST",
-         "API REST de drogaria.",
-         "1.0",
-         "Terms of Service",
-         new Contact("Diego Bizerra","","diegorj93@gmail.com"),
-         "Apache License Version 1.0",
-         "https://www.apache.org/licesen.html", new ArrayList<VendorExtension>()
- );
+		ApiInfo apiInfo = new ApiInfo("Drogaria API REST", "API REST de drogaria.", "1.0", "Terms of Service",
+				new Contact("Diego Bizerra", "", "diegorj93@gmail.com"), "Apache License Version 1.0",
+				"https://www.apache.org/licesen.html", new ArrayList<VendorExtension>());
 
- return apiInfo;
-}
-	
+		return apiInfo;
+	}
 
 }

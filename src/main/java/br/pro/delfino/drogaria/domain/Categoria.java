@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,5 +25,6 @@ public class Categoria implements Serializable {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
 	private Short codigo;
     @Column (length = 50, nullable = false, unique = true)
+    @NotBlank
      private String nome;
 }
