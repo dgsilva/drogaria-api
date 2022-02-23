@@ -23,10 +23,10 @@ import br.pro.delfino.drogaria.repository.ProdutoRepository;
 import br.pro.delfino.drogaria.service.ProdutoService;
 import io.swagger.annotations.Api;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/product")
 @Api(value= "Api Rest Produto")
-@CrossOrigin(origins = "*")
 public class ProdutoController {
 
 	@Autowired
@@ -36,19 +36,21 @@ public class ProdutoController {
 	@Autowired
 	CategoriaReposiotry categoriaRepository;
 	
+	@CrossOrigin(origins = "*")
 	@GetMapping
 	public List<Produto> findAll(){
 	List<Produto> listProduto = produtoService.listar();
 	return listProduto;	
 	}
-	
+	@CrossOrigin(origins = "*")
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
 	public Produto create(@RequestBody Produto produto) {
 		Produto salve = produtoService.create(produto);
 		return salve;
 	}
-	
+
+	@CrossOrigin(origins = "*")
 	@PutMapping("/{produtoId}")
     public ResponseEntity<Produto> atualizar(@PathVariable Integer produtoId, @RequestBody Produto produto) {
       if(!produtoRepository.existsById(produtoId)) {
@@ -60,6 +62,7 @@ public class ProdutoController {
     	return ResponseEntity.ok(produto);
     }
 	
+	@CrossOrigin(origins = "*")
 	@DeleteMapping("/{codigo}")
 	public Produto excluir(@PathVariable Integer codigo) {
 		Optional<Produto>produtoexcluir = produtoRepository.findById(codigo);
@@ -68,9 +71,8 @@ public class ProdutoController {
 		return produtoRetorno;
 	}
 	
-	
-	  @GetMapping("/{codigo}")
-	    //@PathVariable - > se conecta com a GetMapping e o codigo
+	@CrossOrigin(origins = "*")
+	  @GetMapping("/{codigo}")	    //@PathVariable - > se conecta com a GetMapping e o codigo
 	    public Produto buscar(@PathVariable Integer codigo) {
 	    	Optional<Produto> resultado = produtoRepository.findById(codigo);
 	    	Produto produto = resultado.get();

@@ -1,6 +1,7 @@
 package br.pro.delfino.drogaria.controller;
 
 import java.util.List;
+
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -18,13 +19,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
+import br.pro.delfino.drogaria.api.exceptionhandler.RecursoNaoEncontradoException;
 import br.pro.delfino.drogaria.domain.Categoria;
 import br.pro.delfino.drogaria.repository.CategoriaReposiotry;
+import br.pro.delfino.drogaria.service.CategoriaService;
 import io.swagger.annotations.Api;
-
-@RestController
 @CrossOrigin(origins = "*")
+@RestController
 @RequestMapping("/categorias")
 @Api(value= "Api Rest Categoria")
 public class CategoriaController {
@@ -32,24 +35,29 @@ public class CategoriaController {
     private CategoriaReposiotry categoriaReposiotry;
     
     @Autowired
-    private CategoriaReposiotry categoriaService;
+    private CategoriaService categoriaService;
     
 	//Metodo de buscar a listar
     @CrossOrigin(origins = "*")
     @GetMapping()
 	public List<Categoria> listar(){
-	List< Categoria>categorias =categoriaReposiotry.findAll();
-	return categorias;
+    	try {
+    		List< Categoria>categorias = categoriaService.listar();
+    		return categorias;
+    	}catch (RecursoNaoEncontradoException e) {
+    		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada", e);
+		}
 	}
     //Metodo de inserir
     @CrossOrigin(origins = "*")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping()
     public Categoria inserir(@Valid @RequestBody Categoria categoria) {
-    	Categoria CategoriaSalvar= categoriaReposiotry.save(categoria);
+    	Categoria CategoriaSalvar= categoriaService.salvar(categoria);
     	return CategoriaSalvar;
     }
     //Metodo de deletar
+    @CrossOrigin(origins = "*")
     @DeleteMapping("/{codigo}")
     public Categoria excluir( @PathVariable Short codigo) {
     	Optional<Categoria>categoria =categoriaReposiotry.findById(codigo);
@@ -57,7 +65,8 @@ public class CategoriaController {
     	Categoria  categoriaRetorno = categoria.get();
     	return categoriaRetorno;
     	}
-    
+
+    @CrossOrigin(origins = "*")
     @PutMapping("/{categoriaId}")
     public ResponseEntity<Categoria> atualizar(@Valid @PathVariable Short categoriaId, @RequestBody Categoria categoria) {
       if(!categoriaReposiotry.existsById(categoriaId)) {
@@ -69,13 +78,15 @@ public class CategoriaController {
     	return ResponseEntity.ok(categoria);
     }
     //Bsucar um produto
-    @GetMapping("/{codigo}")
-    //@PathVariable - > se conecta com a GetMapping e o codigo
+    @CrossOrigin(origins = "*")
+    @GetMapping("/{codigo}")    //@PathVariable - > se conecta com a GetMapping e o codigo
     public Categoria buscar(@PathVariable Short codigo) {
-    	Optional<Categoria> resultado = categoriaReposiotry.findById(codigo);
-    	Categoria categoria = resultado.get();
+    	try {
+    	Categoria categoria = categoriaService.buscarPorCodigo(codigo);
     	return categoria;
-    	
+    	}catch (RecursoNaoEncontradoException e) {
+    		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada", e);
+		}
     }
 	
 }

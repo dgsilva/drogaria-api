@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,14 +25,15 @@ import br.pro.delfino.drogaria.response.LoginResponse;
 import br.pro.delfino.drogaria.security.JwtSecurity;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-
+@CrossOrigin(origins = "*")
+@RequestMapping("/login")
 @RestController
 public class LoginController {
 
 	@Autowired
 	private UsuarioRepository usuarioRepositorio;
-	
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	@CrossOrigin
+	@PostMapping
 	@ResponseBody
 	public ResponseEntity<LoginResponse>post(@RequestBody LoginPostRequest request){
 		try {

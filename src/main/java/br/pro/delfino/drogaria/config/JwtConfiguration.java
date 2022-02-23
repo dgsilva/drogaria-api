@@ -10,6 +10,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import br.pro.delfino.drogaria.security.JwtSecurity;
 
+
 @Configuration
 @EnableWebSecurity
 public class JwtConfiguration extends WebSecurityConfigurerAdapter {
@@ -21,6 +22,7 @@ public class JwtConfiguration extends WebSecurityConfigurerAdapter {
 				.addFilterAfter(new JwtSecurity(), UsernamePasswordAuthenticationFilter.class)
 				.authorizeRequests()
 				.antMatchers(HttpMethod.POST, "/login").permitAll()
+				.antMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
 				.anyRequest()
 				.authenticated();
 	}
@@ -36,5 +38,4 @@ public class JwtConfiguration extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers(SWAGGER);
 	}
-	
 }
