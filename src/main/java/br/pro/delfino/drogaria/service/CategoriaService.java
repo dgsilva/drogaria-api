@@ -23,7 +23,7 @@ public class CategoriaService {
 	 public Categoria buscarPorCodigo(@PathVariable Short codigo) {
 	    	Optional<Categoria> resultado = categoriaReposiotry.findById(codigo);
 	    	
-	    	if(resultado.isEmpty()) {
+	    	if(Optional.empty() != null) {
 	    		throw new RecursoNaoEncontradoException();
 	    	}
 	    	
