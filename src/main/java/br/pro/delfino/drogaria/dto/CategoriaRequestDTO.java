@@ -1,11 +1,9 @@
 package br.pro.delfino.drogaria.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Setter
-@Getter
-public class CategoriaModel {
+@Data
+public class CategoriaRequestDTO {
 	
 		private Short codigo;
 	    private String nome;

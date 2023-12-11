@@ -70,10 +70,10 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- <dependency> -->
-		<!-- <groupId>org.springframework.boot</groupId> -->
-		<!-- <artifactId>spring-boot-starter-security</artifactId> -->
-		<!-- </dependency> -->
+		 <dependency> 
+		 <groupId>org.springframework.boot</groupId> 
+		 <artifactId>spring-boot-starter-security</artifactId> 
+		 </dependency> 
 
 		<!-- Dependencias para autenticação com JWT -->
 		<dependency>
@@ -95,8 +95,8 @@
 
 		<!-- ModelMapper -->
 		<dependency>
-			<groupId>org.modelmapper</groupId>
-			<artifactId>modelmapper</artifactId>
+			<groupId>org.modelmapper.extensions</groupId>
+			<artifactId>modelmapper-spring</artifactId>
 			<version>3.0.0</version>
 		</dependency>
 		
