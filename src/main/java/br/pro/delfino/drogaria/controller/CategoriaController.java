@@ -25,12 +25,13 @@ import br.pro.delfino.drogaria.api.exceptionhandler.RecursoNaoEncontradoExceptio
 import br.pro.delfino.drogaria.domain.Categoria;
 import br.pro.delfino.drogaria.repository.CategoriaReposiotry;
 import br.pro.delfino.drogaria.service.CategoriaService;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/categorias")
-@Api(value= "Api Rest Categoria")
+@Tag(name = "Api Rest Categoria")
 public class CategoriaController {
+	
     @Autowired
     private CategoriaReposiotry categoriaReposiotry;
     

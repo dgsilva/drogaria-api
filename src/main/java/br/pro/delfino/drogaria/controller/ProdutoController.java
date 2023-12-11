@@ -21,12 +21,12 @@ import br.pro.delfino.drogaria.domain.Produto;
 import br.pro.delfino.drogaria.repository.CategoriaReposiotry;
 import br.pro.delfino.drogaria.repository.ProdutoRepository;
 import br.pro.delfino.drogaria.service.ProdutoService;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/product")
-@Api(value= "Api Rest Produto")
+@Tag(name = "Api Rest Produto")
 public class ProdutoController {
 
 	@Autowired
