@@ -1,8 +1,6 @@
 package br.pro.delfino.drogaria.controller;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.pro.delfino.drogaria.domain.Produto;
+import br.pro.delfino.drogaria.dto.request.ProdutoRequestDTO;
 import br.pro.delfino.drogaria.repository.CategoriaReposiotry;
 import br.pro.delfino.drogaria.repository.ProdutoRepository;
 import br.pro.delfino.drogaria.service.ProdutoService;
@@ -35,48 +34,36 @@ public class ProdutoController {
 	ProdutoService produtoService;
 	@Autowired
 	CategoriaReposiotry categoriaRepository;
-	
+
 	@CrossOrigin(origins = "*")
 	@GetMapping
-	public List<Produto> findAll(){
-	List<Produto> listProduto = produtoService.listar();
-	return listProduto;	
+	public List<Produto> findAll() {
+		return produtoService.listar();
 	}
+
 	@CrossOrigin(origins = "*")
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
-	public Produto create(@RequestBody Produto produto) {
-		Produto salve = produtoService.create(produto);
-		return salve;
+	public Produto create(@RequestBody ProdutoRequestDTO dto) {
+		return produtoService.create(dto);
 	}
 
 	@CrossOrigin(origins = "*")
 	@PutMapping("/{produtoId}")
-    public ResponseEntity<Produto> atualizar(@PathVariable Integer produtoId, @RequestBody Produto produto) {
-      if(!produtoRepository.existsById(produtoId)) {
-    	  return ResponseEntity.notFound().build();
-      }
-        produto.setCodigo(produtoId);
-    	produto = produtoRepository.save(produto);	
-    	
-    	return ResponseEntity.ok(produto);
-    }
-	
+	public ResponseEntity<Produto> atualizar(@PathVariable Integer produtoId, @RequestBody ProdutoRequestDTO dto) {
+		return produtoService.atualizar(produtoId, dto);
+	}
+
 	@CrossOrigin(origins = "*")
 	@DeleteMapping("/{codigo}")
 	public Produto excluir(@PathVariable Integer codigo) {
-		Optional<Produto>produtoexcluir = produtoRepository.findById(codigo);
-		produtoRepository.delete(produtoexcluir.get());
-		Produto produtoRetorno = produtoexcluir.get();
-		return produtoRetorno;
+		return produtoService.excluir(codigo);
 	}
-	
+
 	@CrossOrigin(origins = "*")
-	  @GetMapping("/{codigo}")	    //@PathVariable - > se conecta com a GetMapping e o codigo
-	    public Produto buscar(@PathVariable Integer codigo) {
-	    	Optional<Produto> resultado = produtoRepository.findById(codigo);
-	    	Produto produto = resultado.get();
-	    	return produto;
-	    	
-	    }
+	@GetMapping("/{codigo}") 
+	public Produto buscar(@PathVariable Integer codigo) {
+		return produtoService.buscar(codigo);
+
+	}
 }
