@@ -1,11 +1,7 @@
 package br.pro.delfino.drogaria.controller;
 
 import java.util.List;
-
-import java.util.Optional;
-
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,74 +15,51 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
-
-import br.pro.delfino.drogaria.api.exceptionhandler.RecursoNaoEncontradoException;
 import br.pro.delfino.drogaria.domain.Categoria;
-import br.pro.delfino.drogaria.repository.CategoriaReposiotry;
+import br.pro.delfino.drogaria.dto.request.CategoriaRequestDTO;
 import br.pro.delfino.drogaria.service.CategoriaService;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/categorias")
-@Api(value= "Api Rest Categoria")
+@Tag(name = "Api Rest Categoria")
 public class CategoriaController {
-    @Autowired
-    private CategoriaReposiotry categoriaReposiotry;
-    
-    @Autowired
-    private CategoriaService categoriaService;
-    
-	//Metodo de buscar a listar
-    @CrossOrigin(origins = "*")
-    @GetMapping()
-	public List<Categoria> listar(){
-    	try {
-    		List< Categoria>categorias = categoriaService.listar();
-    		return categorias;
-    	}catch (RecursoNaoEncontradoException e) {
-    		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada", e);
-		}
-	}
-    //Metodo de inserir
-    @CrossOrigin(origins = "*")
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping()
-    public Categoria inserir(@Valid @RequestBody Categoria categoria) {
-    	Categoria CategoriaSalvar= categoriaService.salvar(categoria);
-    	return CategoriaSalvar;
-    }
-    //Metodo de deletar
-    @CrossOrigin(origins = "*")
-    @DeleteMapping("/{codigo}")
-    public Categoria excluir( @PathVariable Short codigo) {
-    	Optional<Categoria>categoria =categoriaReposiotry.findById(codigo);
-    	categoriaReposiotry.delete(categoria.get());
-    	Categoria  categoriaRetorno = categoria.get();
-    	return categoriaRetorno;
-    	}
 
-    @CrossOrigin(origins = "*")
-    @PutMapping("/{categoriaId}")
-    public ResponseEntity<Categoria> atualizar(@Valid @PathVariable Short categoriaId, @RequestBody Categoria categoria) {
-      if(!categoriaReposiotry.existsById(categoriaId)) {
-    	  return ResponseEntity.notFound().build();
-      }
-        categoria.setCodigo(categoriaId);
-    	categoria = categoriaReposiotry.save(categoria);	
-    	
-    	return ResponseEntity.ok(categoria);
-    }
-    //Bsucar um produto
-    @CrossOrigin(origins = "*")
-    @GetMapping("/{codigo}")    //@PathVariable - > se conecta com a GetMapping e o codigo
-    public Categoria buscar(@PathVariable Short codigo) {
-    	try {
-    	Categoria categoria = categoriaService.buscarPorCodigo(codigo);
-    	return categoria;
-    	}catch (RecursoNaoEncontradoException e) {
-    		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada", e);
-		}
-    }
-	
+	@Autowired
+	private CategoriaService categoriaService;
+
+	// Metodo de buscar a listar
+	@CrossOrigin(origins = "*")
+	@GetMapping()
+	public List<Categoria> listar() {
+		return categoriaService.listarTodos();
+	}
+
+	// Metodo de inserir
+	@CrossOrigin(origins = "*")
+	@ResponseStatus(HttpStatus.CREATED)
+	@PostMapping()
+	public Categoria inserir(@Valid @RequestBody CategoriaRequestDTO dto) {
+		return categoriaService.salvar(dto);
+	}
+
+	// Metodo de deletar
+	@CrossOrigin(origins = "*")
+	@DeleteMapping("/{codigo}")
+	public Categoria excluir(@PathVariable Short codigo) {
+		return categoriaService.excluir(codigo);
+	}
+
+	@CrossOrigin(origins = "*")
+	@PutMapping("/{categoriaId}")
+	public ResponseEntity<Categoria> atualizar(@Valid @PathVariable Short categoriaId,
+			@RequestBody CategoriaRequestDTO dto) {
+		return categoriaService.atualizar(categoriaId, dto);
+	}
+
+	@GetMapping("/{codigo}")
+	public ResponseEntity<Categoria> buscar(@PathVariable Short codigo) {
+		return categoriaService.buscar(codigo);
+	}
 }
