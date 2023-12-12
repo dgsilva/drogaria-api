@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import br.pro.delfino.drogaria.domain.Categoria;
-import br.pro.delfino.drogaria.dto.CategoriaRequestDTO;
+import br.pro.delfino.drogaria.dto.request.CategoriaRequestDTO;
 import br.pro.delfino.drogaria.service.CategoriaService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 

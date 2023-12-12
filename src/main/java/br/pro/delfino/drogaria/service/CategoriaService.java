@@ -13,7 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import br.pro.delfino.drogaria.api.exceptionhandler.RecursoNaoEncontradoException;
 import br.pro.delfino.drogaria.domain.Categoria;
-import br.pro.delfino.drogaria.dto.CategoriaRequestDTO;
+import br.pro.delfino.drogaria.dto.request.CategoriaRequestDTO;
 import br.pro.delfino.drogaria.repository.CategoriaReposiotry;
 
 @Service

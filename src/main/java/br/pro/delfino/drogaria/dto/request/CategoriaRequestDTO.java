@@ -1,4 +1,4 @@
-package br.pro.delfino.drogaria.dto;
+package br.pro.delfino.drogaria.dto.request;
 
 import lombok.Data;
 

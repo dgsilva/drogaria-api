@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.pro.delfino.drogaria.domain.Usuario;
-import br.pro.delfino.drogaria.request.LoginPostRequest;
-import br.pro.delfino.drogaria.response.LoginResponse;
+import br.pro.delfino.drogaria.dto.request.LoginPostRequest;
+import br.pro.delfino.drogaria.dto.response.LoginResponse;
 import br.pro.delfino.drogaria.service.LoginService;
 
 @CrossOrigin(origins = "*")
