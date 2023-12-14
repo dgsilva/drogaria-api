@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -35,7 +37,7 @@ public class Usuario {
 	
 	@Column(length = 100, nullable = false, unique = true)
 	private String email;
-	
+	@JsonIgnore
 	@Column(length = 50, nullable = false)
 	private String senha;
 	
