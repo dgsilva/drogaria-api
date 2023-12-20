@@ -49,6 +49,12 @@ public class CategoriaService {
 	}
 
 	public Categoria salvar(CategoriaRequestDTO dto) {
+		if (categoriaReposiotry.find(dto.getNome()) != null) {
+			throw new IllegalArgumentException("Essa categoria já existe cadastro no banco de dados.");
+		}
+		if (dto.getNome() == null) {
+			throw new IllegalArgumentException("Categoria não encontrada");
+		}
 		Categoria categoria = modelMapper.map(dto, Categoria.class);
 		return categoriaReposiotry.save(categoria);
 	}

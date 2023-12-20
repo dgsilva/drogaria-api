@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +13,14 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import br.pro.delfino.drogaria.api.exceptionhandler.RecursoNaoEncontradoException;
 import br.pro.delfino.drogaria.domain.MD5Cryptography;
 import br.pro.delfino.drogaria.domain.Usuario;
 import br.pro.delfino.drogaria.dto.request.LoginPostRequest;
+import br.pro.delfino.drogaria.dto.request.UsuarioMessageDTO;
+import br.pro.delfino.drogaria.dto.request.UsuarioRequestDTO;
 import br.pro.delfino.drogaria.dto.response.LoginResponse;
 import br.pro.delfino.drogaria.repository.UsuarioRepository;
 import br.pro.delfino.drogaria.security.JwtSecurity;
@@ -27,6 +32,15 @@ public class LoginService {
 
 	@Autowired
 	private UsuarioRepository usuarioRepositorio;
+	
+	@Autowired
+	private ModelMapper modelMapper;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
+	
+	@Autowired
+	private LoginMessageProducer loginMessageProducer;
 	
 	public ResponseEntity<LoginResponse>acessar(@RequestBody LoginPostRequest request){
 		try {
@@ -62,25 +76,50 @@ public class LoginService {
 			List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER");
 
 			// COTI_JWT -> nome da aplicação que gerou o token!
-			String token = Jwts.builder().setId("DROGARIA_JWT").setSubject(emailUsuario)
+			return Jwts.builder().setId("DROGARIA_JWT").setSubject(emailUsuario)
 					.claim("authorities",
 							grantedAuthorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
 					.setIssuedAt(new Date(System.currentTimeMillis()))
 					.setExpiration(new Date(System.currentTimeMillis() + 6000000))
 					.signWith(SignatureAlgorithm.HS512, JwtSecurity.SECRET.getBytes()).compact();
 
-			return token;
-
 		}
 		
 		
-		public Usuario cadastrarUsuario(Usuario usuario) {
+		public Usuario cadastrarUsuario(UsuarioRequestDTO dto) {
 			
-			usuario.setSenha(MD5Cryptography.encrypt(usuario.getSenha()));
-			if(usuarioRepositorio.findByEmail(usuario.getEmail())!= null) {
+			if(usuarioRepositorio.findByEmail(dto.getEmail())!= null) {
 				throw new RecursoNaoEncontradoException("O email informado ja esta cadastrado.");
 			}
+			Usuario usuario = modelMapper.map(dto, Usuario.class);
+			usuario.setSenha(MD5Cryptography.encrypt(dto.getSenha()));
+			createWelcomeMessage(usuario);
 			return usuarioRepositorio.save(usuario);
+		}
+		
+		
+		private void createWelcomeMessage(Usuario usuario) {
+
+			UsuarioMessageDTO dto = new UsuarioMessageDTO();
+			dto.setEmailTo(usuario.getEmail());
+			dto.setSubject("Conta criada com sucesso - API Drogaria.");
+
+			StringBuilder sb = new StringBuilder();
+			sb.append("<div>");
+			sb.append("<p>Parabéns " + usuario.getNome() + ", sua conta de usuário foi criada com sucesso</p>");
+			sb.append("<p>Att,</p>");
+			sb.append("<p>Equipe DBS informática,</p>");
+			sb.append("</div>");
+			
+			dto.setBody(sb.toString());
+			
+			try {
+				String message = objectMapper.writeValueAsString(dto);
+				loginMessageProducer.sendMessage(message);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 		}
 		
 }

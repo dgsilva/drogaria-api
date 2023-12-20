@@ -19,6 +19,7 @@ public class Problema {
 	private LocalDateTime dataHora;
 	private String titulo;
 	private List<Campo>campos;
+	private List<String>Errors;
 	
 	@AllArgsConstructor
 	@Setter
